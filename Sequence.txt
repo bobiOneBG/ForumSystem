@@ -1,1 +1,10 @@
-1. Start TemplateRenamer and rebuild.Copy .exe to project files, start and rename
+1. Start TemplateRenamer and rebuild.Copy .exe file to project files, start and rename
+2. StartUp - ConfigureServices configure SendGrid email sender
+3. Add model "Category" and register to ApplicationDbContex
+4. Add model "Post" and register to ApplicationDbContex
+5. Add model "Comment" and register to ApplicationDbContex
+6. Add migration "AddInitialModels"
+7. Show Categories to home page - Create viewmodels -IndexViewModel(Collection of categories) 
+							      and IndexCategoryViewModel(name, title etc)
+		var. -I- get data direct in controller
+			Changes to index.html

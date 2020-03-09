@@ -56,8 +56,8 @@
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
             services.AddScoped<IDbQueryRunner, DbQueryRunner>();
 
-            // Application services
-            services.AddTransient<IEmailSender, NullMessageSender>();
+            // Application services    TO DO ...Sendgrid emailsender
+            services.AddTransient<IEmailSender>(x => new SendGridEmailSender("TO DO"));
             services.AddTransient<ISettingsService, SettingsService>();
         }
 
