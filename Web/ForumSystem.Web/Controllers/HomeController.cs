@@ -4,33 +4,53 @@
     using System.Linq;
 
     using ForumSystem.Data;
+    using ForumSystem.Data.Common.Repositories;
+    using ForumSystem.Data.Models;
+    using ForumSystem.Services.Data;
+    using ForumSystem.Services.Mapping;
     using ForumSystem.Web.ViewModels;
     using ForumSystem.Web.ViewModels.Home;
     using Microsoft.AspNetCore.Mvc;
 
     public class HomeController : BaseController
     {
-        private readonly ApplicationDbContext dbContext;
+        private readonly ICategoriesService categoriesService;
 
-        public HomeController(ApplicationDbContext dbContext)
+        // private readonly ApplicationDbContext dbContext;
+        // private readonly IDeletableEntityRepository<Category> categoriesRepository;
+        public HomeController(ICategoriesService categoriesService)
+        /*ApplicationDbContext dbContext,
+         IDeletableEntityRepository<Category> repository*/
         {
-            this.dbContext = dbContext;
+            this.categoriesService = categoriesService;
+
+            // this.dbContext = dbContext;
+            // this.categoriesRepository = repository;
         }
 
         public IActionResult Index()
         {
-            var viewModel = new IndexViewModel();
-
-            var categories = this.dbContext.Categories.Select(x => new IndexCategoryViewModel
+            var viewModel = new IndexViewModel
             {
-                Name = x.Name,
-                Title = x.Title,
-                Description = x.Description,
-                ImageUrl = x.ImageUrl,
-            }).ToList();
+                Categories =
+                this.categoriesService.GetAll<IndexCategoryViewModel>(),
+            };
 
-            viewModel.Categories = categories;
+            // var categories = /*this.dbContext.Categories*/
+            //    this.categoriesService.GetAll<IndexCategoryViewModel>();
 
+            // IndexCategoryViewModel -> :IMapFrom<Category>
+            // .To<IndexCategoryViewModel>()
+
+            // .Select(x => new IndexCategoryViewModel
+            // {
+            //     Name = x.Name,
+            //     Title = x.Title,
+            //     Description = x.Description,
+            //     ImageUrl = x.ImageUrl,
+            // })
+            // .ToList();
+            // viewModel.Categories = categories;
             return this.View(viewModel);
         }
 

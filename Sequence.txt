@@ -4,7 +4,13 @@
 4. Add model "Post" and register to ApplicationDbContex
 5. Add model "Comment" and register to ApplicationDbContex
 6. Add migration "AddInitialModels"
-7. Show Categories to home page - Create viewmodels -IndexViewModel(Collection of categories) 
-							      and IndexCategoryViewModel(name, title etc)
-		var. -I- get data direct in controller
+7. Show Categories to home page - Create viewmodel -IndexViewModel(Collection of categories) 
+							      and IndexCategoryViewModel(name, title ... etc)
+		-var. -I- get categories direct in controller /dbcontext
 			Changes to index.html
+		-var. -II- througn repository .Select(x => new IndexCategoryViewModel
+		-var. -III- use automapper To<IndexCategoryViewModel> -> 'add : IMapFrom<Category>' 
+			on IndexCategoryViewModel
+		-add property PostsCount to IndexCategoryViewModel -> automapper himself gessing that 
+			'Category' has property 'Posts' and give Posts count
+		-CategorySeeder -> Tupple<string Name, string ImgUrl>
