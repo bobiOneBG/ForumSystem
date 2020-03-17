@@ -11,6 +11,7 @@
     using ForumSystem.Services.Data;
     using ForumSystem.Services.Mapping;
     using ForumSystem.Services.Messaging;
+    using ForumSystem.Web.Controllers;
     using ForumSystem.Web.ViewModels;
 
     using Microsoft.AspNetCore.Builder;
@@ -104,6 +105,7 @@
                 endpoints =>
                     {
                         endpoints.MapControllerRoute("areaRoute", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                        endpoints.MapControllerRoute("forumCategory", "f/{name:alpha}", new { controller ="Categories", action= "ByName" });
                         endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                         endpoints.MapRazorPages();
                     });

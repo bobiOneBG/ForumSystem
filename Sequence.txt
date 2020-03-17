@@ -9,8 +9,11 @@
 		-var. -I- get categories direct in controller /dbcontext
 			Changes to index.html
 		-var. -II- througn repository .Select(x => new IndexCategoryViewModel
-		-var. -III- use automapper To<IndexCategoryViewModel> -> 'add : IMapFrom<Category>' 
+		-var. -III- use CategoryService and use automapper To<IndexCategoryViewModel> -> 'add : IMapFrom<Category>' 
 			on IndexCategoryViewModel
 		-add property PostsCount to IndexCategoryViewModel -> automapper himself gessing that 
 			'Category' has property 'Posts' and give Posts count
 		-CategorySeeder -> Tupple<string Name, string ImgUrl>
+8. Create Categories controller and view 'Byname', mapControllerRoute
+9. CategoriesService - add method GetByName(string name)
+10. Create CategoryViewModel and PostInCategoryViewModel
