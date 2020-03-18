@@ -37,6 +37,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Data\ForumSystem.Data.Models\ForumSystem.Data.Models.csproj" />
     <ProjectReference Include="..\..\Data\ForumSystem.Data\ForumSystem.Data.csproj" />
+    <ProjectReference Include="..\..\ForumSystem.Common\ForumSystem.Common.csproj" />
     <ProjectReference Include="..\..\Services\ForumSystem.Services.Data\ForumSystem.Services.Data.csproj" />
     <ProjectReference Include="..\..\Services\ForumSystem.Services.Mapping\ForumSystem.Services.Mapping.csproj" />
     <ProjectReference Include="..\..\Services\ForumSystem.Services.Messaging\ForumSystem.Services.Messaging.csproj" />
