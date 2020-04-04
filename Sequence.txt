@@ -17,3 +17,28 @@
 8. Create Categories controller and view 'Byname', mapControllerRoute
 9. CategoriesService - add method GetByName(string name)
 10. Create CategoryViewModel and PostInCategoryViewModel
+11. Create Post controller - Get and Post Create, PostCreateViewModel, CreateView created(content - textarea)
+12. Create PostsService and extract interface,
+	SERVICE DO NOT WORK WITH USERMANAGER
+13. Integrate text redactor tinymce - copy settings to libman.json,	and <script src="/lib/tinymce/tinymce.min.js" type="text/javascript"....to create View
+14. Dropdown menu - I - list of values -> IEnumerable<DropDownViewModel> to Create.cshtml through PostCreateInputModel
+	DropDownViewModel map properties values IMapFrom<Category>, inject ICategoriesService to PostController
+	In PostController/[httpget]Create - var viewModel= new PostCreateInputModel{Categories=categories} 
+	and pass to this.View(viewModel)
+	in View Create -> select tag, asp-for="CategoriyId" 
+	and asp-items="Model.Categories.Select(x => new SelectListItem(x.Name, x.Id.ToString()))"(SelectListItems)
+	-or : in PostCreateInputModel -> IEnumerable<SelectListItem>SelectCategories=>this.Categories
+			.Select(x.Name, x.Id.ToString()) //install AspNetCore.Mvc.Rendering package
+
+
+
+
+
+
+
+
+
+
+
+
+
