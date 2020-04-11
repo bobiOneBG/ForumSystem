@@ -29,23 +29,23 @@
 
     </div>
 
-    <div>
+    @*<div>
         <label asp-for="CategoryId"></label>
         <select asp-for="CategoryId" asp-items="Model.Categories
             .Select(x => new SelectListItem(x.Name, x.Id.ToString()))">
         </select>
         <span asp-validation-for="CategoryId" class="text-danger"></span>
 
-    </div>
+    </div>*@
 
-    @*<div>
+    <div>
         <label asp-for="CategoryId"></label>
 
         <select asp-for="CategoryId" asp-items="@Model.SelectCategory" class="form-control">
             <option value="">Category</option>
         </select>
 
-    </div>*@
+    </div>
 
     <hr />
     <input type="submit" name="Submit" value="Submit" class="btn btn-primary" />

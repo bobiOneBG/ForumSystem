@@ -20,6 +20,7 @@
 11. Create Post controller - Get and Post Create, PostCreateViewModel, CreateView created(content - textarea)
 12. Create PostsService and extract interface,
 	SERVICE DO NOT WORK WITH USERMANAGER
+	RedirectToAction(nameof(this.ById), new { id = postId } name of 'id' must be same as parameter 'id' IActionResult ById(int id)
 13. Integrate text redactor tinymce - copy settings to libman.json,	and <script src="/lib/tinymce/tinymce.min.js" type="text/javascript"....to create View
 14. Dropdown menu - I - list of values -> IEnumerable<DropDownViewModel> to Create.cshtml through PostCreateInputModel
 	DropDownViewModel map properties values IMapFrom<Category>, inject ICategoriesService to PostController
@@ -29,16 +30,31 @@
 	and asp-items="Model.Categories.Select(x => new SelectListItem(x.Name, x.Id.ToString()))"(SelectListItems)
 	-or : in PostCreateInputModel -> IEnumerable<SelectListItem>SelectCategories=>this.Categories
 			.Select(x.Name, x.Id.ToString()) //install AspNetCore.Mvc.Rendering package
+15. ShortContent property in PostInCategoryViewModel - remove tags from text(regex)
+16. In view 'ByName' - <a asp-controller="Posts" asp-action="ById" asp-route-id="@post.Id">@post.Title</a> 
+17. PostInCategory - WebUtility.HtmlDekode - fix nonbrakingspace 
+18. Create PostViewModel and view 'ById.cshtml'(Model - PostViewModel) and (h1-Title, Content) , 
+		Generate method 'GetById<T>(int id)' - IPostService and implement to PostService			
+		PostsController - use created method to generate PostViewModel and return it in ById action
+		tinyMce - send to db html - fix in view with '@Html.Raw(Model.Content)' -> XSS threat - htmlsanitizer
+		Insatll htmlSanitazer nugetpackage - In PostViewModel property SanitazedContent => new HtmlSanitizer().Sanitize(this.Content);
+		and in 'ById' - @Html.Raw(Model.SanitazedContent)
+19. Download post view template with font awesome icons
+20. Up and Down Vote buttons:
+		- create Vote :BaseModel -> model : int PostId, Post Post, string UserId, AppUser User, VoteType(enum) Type
+		- DbSet<Vote> to dbContext and create migration
+		- controller 'Votes', with action Post(VoteInputModel) -> vote and count votes (VotesService)
+		- 'ById' view - to add votesCount -> add property VotesCount to PostViewModel and 
+		  add property ICollection<Vote> to 'Post' model
+        -  PostViewModel - CustomMapping(VotesCount)
+		- up and down button -> <a>href="" onclick="func()"</a>
+		- section script - funcs. declare upVote() and downVote()
+		- PostViewModel - create property Id and paste Model.Id as parameter at functions
+		- 'ById'- upVote, downVote functions - var json object - { postId = postId, isUpVote = true/false }
 
 
 
 
 
 
-
-
-
-
-
-
-
+    

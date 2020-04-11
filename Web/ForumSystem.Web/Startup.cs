@@ -48,8 +48,20 @@
                         options.MinimumSameSitePolicy = SameSiteMode.None;
                     });
 
-            services.AddControllersWithViews(opts => opts.Filters
-                .Add(new AutoValidateAntiforgeryTokenAttribute()));
+            services.AddControllersWithViews(opts =>
+            {
+                opts.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            });
+
+            services.AddAntiforgery(options =>
+            {
+                // Set Cookie properties using CookieBuilder properties†.
+                // options.FormFieldName = "AntiforgeryFieldname";
+                options.HeaderName = "X-CSRF-TOKEN";
+
+                // options.SuppressXFrameOptionsHeader = false;
+            });
+
             services.AddRazorPages();
 
             services.AddSingleton(this.configuration);
@@ -64,6 +76,7 @@
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<ICategoriesService, CategoriesService>();
             services.AddTransient<IPostsService, PostsService>();
+            services.AddTransient<IVotesService, VotesService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

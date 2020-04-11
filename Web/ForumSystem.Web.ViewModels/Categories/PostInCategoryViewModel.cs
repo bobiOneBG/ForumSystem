@@ -9,6 +9,8 @@
 
     public class PostInCategoryViewModel : IMapFrom<Post>
     {
+        public int Id { get; set; }
+
         public string Title { get; set; }
 
         public string UserUserName { get; set; }

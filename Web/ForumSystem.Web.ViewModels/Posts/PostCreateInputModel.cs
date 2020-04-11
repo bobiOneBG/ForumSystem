@@ -4,11 +4,9 @@
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
 
-    using ForumSystem.Data.Models;
-    using ForumSystem.Services.Mapping;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
-    public class PostCreateInputModel
+    public class PostCreateInputModel /*: IMapTo<Post>*/
     {
         [Required]
         public string Title { get; set; }
@@ -22,7 +20,8 @@
 
         public IEnumerable<CategoryDropDownViewModel> Categories { get; set; }
 
-        // public IEnumerable<SelectListItem> SelectCategory => this.Categories
-        //   .Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() });
+        public IEnumerable<SelectListItem> SelectCategory =>
+            this.Categories?
+          .Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() });
     }
 }
