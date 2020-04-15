@@ -51,9 +51,25 @@
 		- section script - funcs. declare upVote() and downVote()
 		- PostViewModel - create property Id and paste Model.Id as parameter at functions
 		- 'ById'- upVote, downVote functions - var json object - { postId = postId, isUpVote = true/false }
+		// AUTOMAPPER - ienumerable.asiQueryable.To<Model>
+		// from Model to Post in Model -> IMapTo<Post>
+21. XUnit test - InMemoryDatabase - install library Microsoft.EntityFrameworkCore.InMemory (simulate real database in PC memory)
+			
 
+		var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                   .UseInMemoryDatabase(Guid.NewGuid().ToString());
 
+        var repository = new EfRepository<Vote>(new ApplicationDbContext(options.Options));
 
+        var service = new VotesService(repository);
+
+22. Integration tests - installing Microsoft.AspNetCore.Mvc.Testing 
+		var serverFactory = new WebApplicationFactory<Startup>();
+        var client = serverFactory.CreateClient();
+
+	'ITestOutputHelper output' field in test class, write in test explorer
+	this test don't execute js in html 
+23. Selenium - virtual browser - SPA apps
 
 
 
