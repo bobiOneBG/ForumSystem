@@ -5,11 +5,16 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">@ViewData["Title"]</h1>
+    <h2 class="display-4">@ViewData["Title"]</h2>
+    @*<cache expires-after=TimeSpan.FromSeconds(15) vary-by-query="id">
+        <h1 class="display-4">@DateTime.UtcNow</h1>
+    </cache>*@
+<a asp-controller="Posts" asp-action="Create" class="btn alert-info">Create new Forum Post</a>
+<hr width="50%"/>
 </div>
 <div class="row">
     @foreach (var category in Model.Categories)
-    {
+    {   
         <div class="col-md-4 media p-3">
             <img src="@category.ImageUrl" width="100" height="80" class="mr-3" alt="@category.Title">
             <div class="media-body">

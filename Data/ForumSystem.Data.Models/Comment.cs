@@ -4,9 +4,13 @@
 
     public class Comment : BaseDeletableModel<int>
     {
-        public string PostId { get; set; }
+        public int PostId { get; set; }
 
         public virtual Post Post { get; set; }
+
+        public int? ParentId { get; set; }
+
+        public Comment Parent { get; set; }
 
         public string Content { get; set; }
 

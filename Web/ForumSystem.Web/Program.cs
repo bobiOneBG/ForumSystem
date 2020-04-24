@@ -2,6 +2,7 @@
 {
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
 
     public static class Program
     {

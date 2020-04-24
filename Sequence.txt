@@ -71,6 +71,126 @@
 	this test don't execute js in html 
 23. Selenium - virtual browser - SPA apps
 
+----1
+	Kendo components,        HighCharts
+----2
+	IMemoryCache:
+	MyFirstMvsApp -> services.AddMemoryCache() inject tp ctor IMemoryCache memoryCache, method TestCache()
+    public IActionResult TestCache()
+			 {
+			     if (!memoryCache.TryGetValue<DateTime>("TimeNow", out var value))
+			     {
+			         value = DateTime.UtcNow;
+			         memoryCache.Set("TimeNow", value, TimeSpan.FromMinutes(10));
+			     }
+
+			     return this.Ok(value);
+			 }
+
+				"""" memoryCache.Set("TimeNow", value, new MemoryCacheEntryOptions
+			        {
+			            Priority = CacheItemPriority.NeverRemove,
+			            SlidingExpiration = new TimeSpan(0, 10, 10),
+			        });
+		
+	IDistributedCache
+		- Redis database
+		App database:
+			- services.AddDistributedMemoryCache(); use inMemory - stop app lose data
+			- services.AddDistributedSqlServerCache - install Microsoft.Extensions.Caching.SqlServer
+				services.AddDistributedSqlServerCache(options =>
+				{
+				    options.ConnectionString = this.configuration
+				        .GetConnectionString("DefaultConnection");
+				    options.SchemaName = "dbo";
+				    options.TableName = "CacheRecords";
+				});
+	ResponseCache
+
+24. Sessions - pass information betweem two actions, to use session must inmplement IDistributedCache,
+	by default sessions are switched off
+		services.AddDistributedCache();
+		services.AddSession(options=>
+		{
+			oprions.IdleTimeOut = TimeSpan.FromSeconds(10);
+			oprions.Cookie.HttpOnly() = true;
+			oprions.Cookie.IsEssential = true;
+		});
+		...........
+		app.UseSession();
+		............
+		this.HttpContext.Session.SetString("Name", "Bobi");
+		............
+		var value = HttpContext.Session.GetString("Name");
+
+25. TempData - pass information betweem action and next action, tempdata is'nt Essential
+		Posts/Create
+			this.TempData["InfoMessage"] = "Forum Post Created";
+			  this.RedirectToAction(nameof(this.ById)
+		in ById view
+			@if (this.TempData["InfoMessage"] != null)
+			{
+			    <div>
+			        @this.TempData["InfoMessage"];
+			    </div>
+			}
+---- Performance - ApplicationInsights, dotTrace
+		-always async-await
+		-enable Compression
+			services.AddResponseCompression(options=>
+            {
+                options.EnableForHttps = true;
+            });
+			...................
+			app.UseResponseCompression();
+		-reduce httprequests - install BuildBundlerMinifier
+			condigure in bundleConfig
+26. CreatePost button to main page
+	<a asp-controller="Posts" asp-action="Create" class="btn alert-info">Create new Forum Post</a>
+	- from page source:
+		<a class="btn alert-info" href="/Posts/Create">Create new Forum Post</a>
+27. Pagination
+	 - add route forumCategoryWithPage(added page parameter)
+	 - in iPostService -> T GetByCategoryId<T>(int categoryId, int? take = null, int skip = 0); 
+	 - in PostService -> take posts with categoryId All() or  query = query.Take(take.Value);
+	 - in CategoryViewModel -> Rename property Posts to ForumPosts(automaper can't consider Skip() and Take())
+	 - in PostService -> help method get PostCountByCategoryId and pull to IPostService
+	 - in CategoryViewModel - property int CurrentPage. in categoriesController set viewModel.CurrentPage = page;
+	 - ByName.cshtml copy bootstrap pagination and modified
+28. Comments on Comment
+	- in Comment - create properties 'public int? ParentId { get; set; }' and 'public Comment Parent { get; set; }'
+	- applay migration
+	- view Posts'ById' add comment form <div id="AddCommentForm style=display:none">...  add tinymce
+		-'ById' - button -> onclick=showAddCommentForm()
+		        - scripts section - function showAddCommentForm(){....}
+				- <form asp-controller="Comments" asp-action=create method=post
+					- <input type="submit" value="Add Comment" class="btn btn-"...
+					- <input type="hidden" name="PostId" value="@this.Model.Id" /> // send PostId to controller
+	- Create CommentsController
+		- async method 'Create' on CommentsController - parameter - CommentCreateInputModel
+		- add 'Comments' folder to webViewModels and 'CommentCreateInputModel' class
+		- interface ICommentsService with method 'Create' and implement it to CommentService
+		- register interface to Startup
+		- inject ICommentsService to CommentsController and call method in CommentsController
+		- add button to Views/Posts 'ById' - '+ Comment' -> 
+			onclick this button show form <form asp-controller="Comments" asp-action="Create" method="post"...(tinymce text redactor)
+			click on 'AddComment' send post request to CommentsController/Create
+		-Create comment on coment for posts
+			- in PostViewModel create property IEnumerable<PostCommentViewModel> Comments (as 'Comments' is a navigational property to comments in 'Post' model)
+				and by virtue of autoMapper receive comment on given Post 
+			- in Views/Posts 'ById' foreach(var comment in Model.Comments) - created property in PostViewModel
+				- visualize comment use existing html -> dont forget to sanitize client input(tinimce is html)
+			- <form id="AddCommentForm" - <input type="hidden" name="ParentId" value="0" />
+			- @*comment view*@ call showAddCommentForm(0), @*reply view*@ call showAddCommentForm(@this.Model.Id) //parentID
+			- function showAddCommentForm(parentId) set value -> { $("#AddCommentForm input[name='ParentId']").val(parentId);    
+			- verify, that commentId and parentId are in same post
+				- ICommentService -> bool IsInSamePost(int firstId, int secondId);
+				- implement to CommentsService
 
 
-    
+
+
+
+
+
+

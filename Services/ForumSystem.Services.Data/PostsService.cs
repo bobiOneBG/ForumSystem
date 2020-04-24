@@ -1,5 +1,6 @@
 ﻿namespace ForumSystem.Services.Data
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -16,6 +17,15 @@
             this.postsRepository = postsRepository;
         }
 
+        public int GetPostsCountByCategoryId(int categoryId)
+        {
+            var count = this.postsRepository
+                .All()
+                .Count(p => p.CategoryId == categoryId);
+
+            return count;
+        }
+
         public async Task<int> CreateAsync(string title, string content, int categoryId, string userId)
         {
             var post = new Post
@@ -30,6 +40,22 @@
             await this.postsRepository.SaveChangesAsync();
 
             return post.Id;
+        }
+
+        public IEnumerable<T> GetByCategoryId<T>(int categoryId, int? take = null, int skip = 0)
+        {
+            var query = this.postsRepository
+                .All()
+                .OrderByDescending(p => p.CreatedOn)
+                .Where(p => p.CategoryId == categoryId)
+                .Skip(skip);
+
+            if (take.HasValue)
+            {
+                query = query.Take(take.Value);
+            }
+
+            return query.To<T>().ToList();
         }
 
         public T GetById<T>(int id)

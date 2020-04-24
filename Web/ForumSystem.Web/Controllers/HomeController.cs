@@ -12,7 +12,7 @@
     using ForumSystem.Web.ViewModels.Home;
     using Microsoft.AspNetCore.Mvc;
 
-    public class HomeController : BaseController
+    public class HomeController : Controller
     {
         private readonly ICategoriesService categoriesService;
 

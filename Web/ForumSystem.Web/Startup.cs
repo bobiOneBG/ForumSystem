@@ -11,9 +11,7 @@
     using ForumSystem.Services.Data;
     using ForumSystem.Services.Mapping;
     using ForumSystem.Services.Messaging;
-    using ForumSystem.Web.Controllers;
     using ForumSystem.Web.ViewModels;
-
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -37,6 +35,11 @@
         {
             services.AddDbContext<ApplicationDbContext>(
                 options => options.UseSqlServer(this.configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddResponseCompression(options =>
+            {
+                options.EnableForHttps = true;
+            });
 
             services.AddDefaultIdentity<ApplicationUser>(IdentityOptionsProvider.GetIdentityOptions)
                 .AddRoles<ApplicationRole>().AddEntityFrameworkStores<ApplicationDbContext>();
@@ -66,6 +69,14 @@
 
             services.AddSingleton(this.configuration);
 
+            services.AddDistributedSqlServerCache(options =>
+            {
+                options.ConnectionString = this.configuration
+                    .GetConnectionString("DefaultConnection");
+                options.SchemaName = "dbo";
+                options.TableName = "CacheRecords";
+            });
+
             // Data repositories
             services.AddScoped(typeof(IDeletableEntityRepository<>), typeof(EfDeletableEntityRepository<>));
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
@@ -77,6 +88,7 @@
             services.AddTransient<ICategoriesService, CategoriesService>();
             services.AddTransient<IPostsService, PostsService>();
             services.AddTransient<IVotesService, VotesService>();
+            services.AddTransient<ICommentService, CommentService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -108,6 +120,7 @@
                 app.UseHsts();
             }
 
+            app.UseResponseCompression();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
@@ -120,9 +133,18 @@
             app.UseEndpoints(
                 endpoints =>
                     {
-                        endpoints.MapControllerRoute("areaRoute", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-                        endpoints.MapControllerRoute("forumCategory", "f/{name:alpha}", new { controller = "Categories", action = "ByName" });
-                        endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+                        endpoints.MapControllerRoute(
+                            "forumCategory",
+                            pattern: "f/{name:minlength(3)}",
+                            new { controller = "Categories", action = "ByName" });
+
+                        endpoints.MapControllerRoute(
+                            "areaRoute",
+                            pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+                        endpoints.MapControllerRoute(
+                            "default",
+                            pattern: "{controller=Home}/{action=Index}/{id?}");
                         endpoints.MapRazorPages();
                     });
         }
