@@ -10,11 +10,11 @@
 
     public class CommentsController : Controller
     {
-        private readonly ICommentService commentService;
+        private readonly ICommentService commentsService;
 
-        public CommentsController(ICommentService commentService)
+        public CommentsController(ICommentService commentsService)
         {
-            this.commentService = commentService;
+            this.commentsService = commentsService;
         }
 
         [HttpPost]
@@ -28,7 +28,7 @@
             // defense from users foolishness
             if (parentId.HasValue)
             {
-                if (!this.commentService.IsInPostId(parentId.Value, input.PostId))
+                if (!this.commentsService.IsInPostId(parentId.Value, input.PostId))
                 {
                     return this.BadRequest();
                 }
@@ -36,7 +36,7 @@
 
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            await this.commentService.Create(input.PostId, input.Content, userId, parentId);
+            await this.commentsService.Create(input.PostId, input.Content, userId, parentId);
 
             return this.RedirectToAction("ById", "Posts", new { id = input.PostId });
         }

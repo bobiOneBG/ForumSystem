@@ -186,6 +186,20 @@
 			- verify, that commentId and parentId are in same post
 				- ICommentService -> bool IsInSamePost(int firstId, int secondId);
 				- implement to CommentsService
+				- defense from users foolishness - CommentsController -> if (parentId.HasValue){....}
+		- Create  function 'ById' view - void DisplayComments(int? parentId) - recursive
+
+29. Show DateTime to local time
+	- anonimous function to script part in view,than <time datetime="@Model.CreatedOn.ToString("O")">
+
+ViewComponent - when get data from db or service, when work with existing model - PartialView
+
+
+
+
+
+
+
 
 
 
